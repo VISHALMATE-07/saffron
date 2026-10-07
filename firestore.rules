@@ -1,45 +1,74 @@
 rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    function signedIn() { return request.auth != null; }
+    // ---------- HELPER FUNCTIONS ----------
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
     function isAdmin() {
       return signedIn() &&
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "admin";
     }
+
+
+    // ---------- USERS ----------
 
     match /users/{uid} {
-      allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
-      allow create: if signedIn() && request.auth.uid == uid
-        && request.resource.data.keys().hasOnly(['uid','name','email','phone','role','createdAt'])
-        && request.resource.data.uid == uid
-        && request.resource.data.role == 'customer';
-      allow update: if signedIn() && request.auth.uid == uid
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name','phone']);
-      allow delete: if false;
+
+      // User can read own profile, admin can read all users
+      allow read: if signedIn() &&
+        (request.auth.uid == uid || isAdmin());
+
+      // New user registration
+      // Users can only create their own profile with customer role
+      allow create: if signedIn() &&
+        request.auth.uid == uid &&
+        request.resource.data.role == "customer";
+
+      // User can update own profile, but cannot change role
+      allow update: if signedIn() &&
+        request.auth.uid == uid &&
+        request.resource.data.role == resource.data.role;
+
+      // Only admin can delete users
+      allow delete: if isAdmin();
     }
 
+
+    // ---------- MENU ----------
+
     match /menu/{menuId} {
-      allow read: if resource.data.available == true || isAdmin();
+
+      // Everyone can view menu
+      allow read: if true;
+
+      // Only admin can manage menu
       allow create, update, delete: if isAdmin();
     }
 
+
+    // ---------- ORDERS ----------
+
     match /orders/{orderId} {
-      allow create: if signedIn()
-        && request.resource.data.keys().hasOnly(['orderId','customerId','customerName','customerPhone','notes','items','totalAmount','status','createdAt'])
-        && request.resource.data.orderId == orderId
-        && request.resource.data.customerId == request.auth.uid
-        && request.resource.data.status == 'Pending'
-        && request.resource.data.createdAt == request.time
-        && request.resource.data.customerName is string
-        && request.resource.data.customerPhone is string
-        && request.resource.data.items is list && request.resource.data.items.size() > 0
-        && request.resource.data.totalAmount is number && request.resource.data.totalAmount > 0;
-      allow read: if signedIn() && (resource.data.customerId == request.auth.uid || isAdmin());
-      allow update: if isAdmin()
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
-        && request.resource.data.status in ['Pending','Confirmed','Preparing','Ready','Completed','Cancelled'];
-      allow delete: if false;
+
+      // Customer can create their own order
+      allow create: if signedIn() &&
+        request.resource.data.customerId == request.auth.uid;
+
+      // Customer can see only own orders
+      // Admin can see all orders
+      allow read: if signedIn() &&
+        (resource.data.customerId == request.auth.uid || isAdmin());
+
+      // Only admin can update order status
+      allow update: if isAdmin();
+
+      // Only admin can delete orders
+      allow delete: if isAdmin();
     }
   }
 }

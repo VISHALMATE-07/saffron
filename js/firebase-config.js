@@ -14,7 +14,6 @@ const firebaseConfig = {
   storageBucket: "saffron-d926b.firebasestorage.app",
   messagingSenderId: "242756185704",
   appId: "1:242756185704:web:eb2f11ed2d522126bbd5dd",
-  measurementId: "G-TT9ZFE8KMG"
 };
 
 
