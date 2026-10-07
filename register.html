@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Register | SAFFRON Restaurant</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="register">
+<nav class="navbar"><a class="brand" href="index.html">SAFFRON<small>RESTAURANT</small></a>
+<button class="burger" onclick="document.querySelector('.links').classList.toggle('open')">☰</button>
+<ul class="links"><li><a href="index.html">Home</a></li><li><a href="menu.html">Menu</a></li><li><a href="index.html#about">About</a></li><li><a href="index.html#contact">Contact</a></li><li><a href="login.html" id="authLink">Login</a></li><li><a href="cart.html">🛒 Cart (<span id="cartCount">0</span>)</a></li></ul></nav>
+<section class="section narrowbox"><form class="card" id="registerForm"><h2>Create Account</h2>
+<label>Full Name<input id="name" required></label>
+<label>Email<input id="email" type="email" required></label>
+<label>Phone<input id="phone" inputmode="numeric" maxlength="10" required></label>
+<label>Password<input id="password" type="password" minlength="6" required></label>
+<label>Confirm Password<input id="confirm" type="password" required></label>
+<button class="btn full" type="submit">Register</button>
+<p class="center">Already registered? <a href="login.html"><b>Login</b></a></p></form></section>
+<footer><b>SAFFRON Restaurant</b><br>© 2026 SAFFRON Restaurant. All Rights Reserved.</footer>
+<script type="module" src="js/script.js"></script>
+</body>
+</html>

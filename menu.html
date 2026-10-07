@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Menu | SAFFRON Restaurant</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="menu">
+<nav class="navbar"><a class="brand" href="index.html">SAFFRON<small>RESTAURANT</small></a>
+<button class="burger" onclick="document.querySelector('.links').classList.toggle('open')">☰</button>
+<ul class="links"><li><a href="index.html">Home</a></li><li><a href="menu.html">Menu</a></li><li><a href="index.html#about">About</a></li><li><a href="index.html#contact">Contact</a></li><li><a href="login.html" id="authLink">Login</a></li><li><a href="cart.html">🛒 Cart (<span id="cartCount">0</span>)</a></li></ul></nav>
+<section class="section"><h2 class="title">Our Menu</h2><div id="categories" class="cats"></div><div id="menuGrid" class="grid"></div></section>
+<footer><b>SAFFRON Restaurant</b><br>© 2026 SAFFRON Restaurant. All Rights Reserved.</footer>
+<script type="module" src="js/script.js"></script>
+</body>
+</html>

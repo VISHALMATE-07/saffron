@@ -1,0 +1,49 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    // Reads users/{uid}.role from Firestore. Admin role is set manually in the console.
+    function isAdmin() {
+      return signedIn() &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // users: register.html creates the doc; getRole() in script.js reads it
+    match /users/{uid} {
+      allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
+      allow create: if signedIn() && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['uid','name','email','phone','role','createdAt'])
+        && request.resource.data.uid == uid
+        && request.resource.data.role == 'customer';      // nobody can self-register as admin
+      allow update: if signedIn() && request.auth.uid == uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name','phone']); // role can't change
+      allow delete: if false;
+    }
+
+    // menu: menu.html queries where("available","==",true); admin.html reads everything
+    match /menu/{menuId} {
+      allow read: if resource.data.available == true || isAdmin();
+      allow create, update, delete: if isAdmin();
+    }
+
+    // orders: cart.html creates; "My Orders" queries where("customerId","==",uid); admin.html reads/updates all
+    match /orders/{orderId} {
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(['orderId','customerId','customerName','customerPhone','notes','items','totalAmount','status','createdAt'])
+        && request.resource.data.orderId == orderId
+        && request.resource.data.customerId == request.auth.uid
+        && request.resource.data.status == 'Pending'
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.customerName is string
+        && request.resource.data.customerPhone is string
+        && request.resource.data.items is list && request.resource.data.items.size() > 0
+        && request.resource.data.totalAmount is number && request.resource.data.totalAmount > 0;
+      allow read: if signedIn() && (resource.data.customerId == request.auth.uid || isAdmin());
+      allow update: if isAdmin()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
+        && request.resource.data.status in ['Pending','Confirmed','Preparing','Ready','Completed','Cancelled'];
+      allow delete: if false;
+    }
+  }
+}

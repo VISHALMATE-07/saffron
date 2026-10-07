@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin | SAFFRON Restaurant</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="admin">
+
+<div id="adminApp" hidden>
+<header class="admin-top"><b>SAFFRON Admin</b><div class="tabs"><button data-tab="dashboard" class="active">Dashboard</button><button data-tab="menu">Menu Management</button><button data-tab="orders">Orders</button><button id="logoutBtn">Logout</button></div></header>
+<main class="section">
+<section class="tab" id="tab-dashboard"><h2 class="title">Dashboard</h2><div class="grid stats">
+<div class="card center"><h3 id="statMenu">0</h3><p>Total Menu Items</p></div><div class="card center"><h3 id="statOrders">0</h3><p>Total Orders</p></div>
+<div class="card center"><h3 id="statPending">0</h3><p>Pending Orders</p></div><div class="card center"><h3 id="statDone">0</h3><p>Completed Orders</p></div>
+<div class="card center"><h3 id="statSales">₹0</h3><p>Total Sales</p></div></div></section>
+<section class="tab" id="tab-menu" hidden><h2 class="title">Menu Management</h2>
+<p class="center"><button class="btn" id="addMenuBtn">+ Add Item</button> <button class="btn outline" id="seedBtn">Load sample menu</button></p>
+<div class="tablewrap"><table><thead><tr><th>Name</th><th>Category</th><th>Price</th><th>Available</th><th>Actions</th></tr></thead><tbody id="menuBody"></tbody></table></div></section>
+<section class="tab" id="tab-orders" hidden><h2 class="title">Orders</h2>
+<div class="tablewrap"><table><thead><tr><th>Order ID</th><th>Customer</th><th>Phone</th><th>Total</th><th>Date</th><th>Status</th><th>Action</th></tr></thead><tbody id="ordersBody"></tbody></table></div></section>
+</main>
+<dialog id="menuDialog"><form id="menuForm"><h3 id="menuDialogTitle">Add Item</h3><input type="hidden" id="mId">
+<label>Name<input id="mName" required></label><label>Category<select id="mCategory"><option>Starters</option><option>Main Course</option><option>Rice</option><option>Breads</option><option>Beverages</option><option>Desserts</option></select></label>
+<label>Description<textarea id="mDesc" rows="2" required></textarea></label><label>Price (₹)<input id="mPrice" type="number" min="1" required></label>
+<label>Image URL (optional)<input id="mImage" type="url"></label><label class="check"><input id="mAvail" type="checkbox" checked> Available</label>
+<div class="row"><button class="btn" type="submit">Save</button><button class="btn outline" type="button" onclick="this.closest('dialog').close()">Cancel</button></div></form></dialog>
+<dialog id="orderDialog"><div id="orderDetails"></div><button class="btn outline" onclick="this.closest('dialog').close()">Close</button></dialog>
+</div>
+
+<script type="module" src="js/script.js"></script>
+</body>
+</html>
