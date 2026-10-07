@@ -3,31 +3,27 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     function signedIn() { return request.auth != null; }
-    // Reads users/{uid}.role from Firestore. Admin role is set manually in the console.
     function isAdmin() {
       return signedIn() &&
         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
     }
 
-    // users: register.html creates the doc; getRole() in script.js reads it
     match /users/{uid} {
       allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
       allow create: if signedIn() && request.auth.uid == uid
         && request.resource.data.keys().hasOnly(['uid','name','email','phone','role','createdAt'])
         && request.resource.data.uid == uid
-        && request.resource.data.role == 'customer';      // nobody can self-register as admin
+        && request.resource.data.role == 'customer';
       allow update: if signedIn() && request.auth.uid == uid
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name','phone']); // role can't change
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name','phone']);
       allow delete: if false;
     }
 
-    // menu: menu.html queries where("available","==",true); admin.html reads everything
     match /menu/{menuId} {
       allow read: if resource.data.available == true || isAdmin();
       allow create, update, delete: if isAdmin();
     }
 
-    // orders: cart.html creates; "My Orders" queries where("customerId","==",uid); admin.html reads/updates all
     match /orders/{orderId} {
       allow create: if signedIn()
         && request.resource.data.keys().hasOnly(['orderId','customerId','customerName','customerPhone','notes','items','totalAmount','status','createdAt'])
