@@ -3,15 +3,42 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Menu | SAFFRON Restaurant</title>
+<title>Menu - SAFFRON</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
-<body data-page="menu">
-<nav class="navbar"><a class="brand" href="index.html">SAFFRON<small>RESTAURANT</small></a>
-<button class="burger" onclick="document.querySelector('.links').classList.toggle('open')">☰</button>
-<ul class="links"><li><a href="index.html">Home</a></li><li><a href="menu.html">Menu</a></li><li><a href="index.html#about">About</a></li><li><a href="index.html#contact">Contact</a></li><li><a href="login.html" id="authLink">Login</a></li><li><a href="cart.html">🛒 Cart (<span id="cartCount">0</span>)</a></li></ul></nav>
-<section class="section"><h2 class="title">Our Menu</h2><div id="categories" class="cats"></div><div id="menuGrid" class="grid"></div></section>
-<footer><b>SAFFRON Restaurant</b><br>© 2026 SAFFRON Restaurant. All Rights Reserved.</footer>
-<script type="module" src="js/script.js"></script>
+<body>
+<header class="navbar">
+  <a class="logo" href="index.html"><span class="logo-main">SAFFRON</span><span class="logo-sub">RESTAURANT</span></a>
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">&#9776;</button>
+  <nav class="nav-links" id="navLinks">
+    <a href="index.html">Home</a>
+    <a href="menu.html" class="active">Menu</a>
+    <a href="index.html#about">About</a>
+    <a href="index.html#contact">Contact</a>
+    <a href="admin.html" id="adminLink" class="hidden">Admin</a>
+    <a href="login.html" id="authLink">Login</a>
+    <a href="cart.html">Cart <span class="badge" id="cartCount">0</span></a>
+  </nav>
+</header>
+
+<main class="container">
+  <h2 class="section-title">Our Menu</h2>
+  <div class="chips" id="categoryBar">
+    <button class="chip active" data-category="All">All</button>
+    <button class="chip" data-category="Starters">Starters</button>
+    <button class="chip" data-category="Main Course">Main Course</button>
+    <button class="chip" data-category="Rice">Rice</button>
+    <button class="chip" data-category="Breads">Breads</button>
+    <button class="chip" data-category="Beverages">Beverages</button>
+    <button class="chip" data-category="Desserts">Desserts</button>
+  </div>
+  <p class="status-message" id="menuStatus">Loading menu...</p>
+  <div class="grid three" id="menuGrid"></div>
+</main>
+<footer class="footer">
+  <strong>SAFFRON</strong> Restaurant<br>
+  <small>&copy; 2026 SAFFRON Restaurant. All rights reserved.</small>
+</footer>
+<script type="module" src="js/menu.js"></script>
 </body>
 </html>

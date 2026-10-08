@@ -3,20 +3,44 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Login | SAFFRON Restaurant</title>
+<title>Login - SAFFRON</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
-<body data-page="login">
-<nav class="navbar"><a class="brand" href="index.html">SAFFRON<small>RESTAURANT</small></a>
-<button class="burger" onclick="document.querySelector('.links').classList.toggle('open')">☰</button>
-<ul class="links"><li><a href="index.html">Home</a></li><li><a href="menu.html">Menu</a></li><li><a href="index.html#about">About</a></li><li><a href="index.html#contact">Contact</a></li><li><a href="login.html" id="authLink">Login</a></li><li><a href="cart.html">🛒 Cart (<span id="cartCount">0</span>)</a></li></ul></nav>
-<section class="section narrowbox"><form class="card" id="loginForm"><h2>Login</h2>
-<label>Email<input id="email" type="email" required></label>
-<label>Password<input id="password" type="password" required></label>
-<button class="btn full" type="submit">Login</button>
-<a class="btn outline full" href="register.html">Register</a>
-<p class="center"><a href="#" id="forgotLink">Forgot password?</a></p></form></section>
-<footer><b>SAFFRON Restaurant</b><br>© 2026 SAFFRON Restaurant. All Rights Reserved.</footer>
-<script type="module" src="js/script.js"></script>
+<body>
+<header class="navbar">
+  <a class="logo" href="index.html"><span class="logo-main">SAFFRON</span><span class="logo-sub">RESTAURANT</span></a>
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">&#9776;</button>
+  <nav class="nav-links" id="navLinks">
+    <a href="index.html">Home</a>
+    <a href="menu.html">Menu</a>
+    <a href="index.html#about">About</a>
+    <a href="index.html#contact">Contact</a>
+    <a href="admin.html" id="adminLink" class="hidden">Admin</a>
+    <a href="login.html" id="authLink" class="active">Login</a>
+    <a href="cart.html">Cart <span class="badge" id="cartCount">0</span></a>
+  </nav>
+</header>
+
+<main class="auth-wrap">
+  <div class="card form-card">
+    <h2>Welcome Back</h2>
+    <p class="muted">Login to view your orders or manage the restaurant.</p>
+    <form id="loginForm" novalidate>
+      <label for="email">Email</label>
+      <input type="email" id="email" autocomplete="email" placeholder="you@example.com">
+      <label for="password">Password</label>
+      <input type="password" id="password" autocomplete="current-password" placeholder="Your password">
+      <p class="error-text" id="formMessage"></p>
+      <button type="submit" class="btn btn-full" id="loginBtn">Login</button>
+    </form>
+    <button type="button" class="link-btn" id="forgotBtn">Forgot Password?</button>
+    <p class="center">New to SAFFRON? <a class="btn btn-small btn-outline" href="register.html">Register</a></p>
+  </div>
+</main>
+<footer class="footer">
+  <strong>SAFFRON</strong> Restaurant<br>
+  <small>&copy; 2026 SAFFRON Restaurant. All rights reserved.</small>
+</footer>
+<script type="module" src="js/auth.js"></script>
 </body>
 </html>

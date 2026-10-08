@@ -1,74 +1,26 @@
+// =====================================================================
+//  firestore.rules  -  PLACEHOLDER (NOT FINAL, NOT PRODUCTION-READY)
+// =====================================================================
+//  Write the real rules AFTER reviewing README.md section
+//  "FIRESTORE SECURITY RULE REQUIREMENTS" and the exact queries in:
+//     js/menu.js, js/checkout.js, js/admin.js, js/auth.js
+//
+//  The rules must be pasted in:
+//     Firebase Console > Firestore Database > Rules > Publish
+//  (or deployed with the Firebase CLI, which is optional).
+//
+//  Until real rules exist, the app cannot work with a locked database
+//  ("allow read, write: if false"). For a short first test only, you may
+//  use Firebase "test mode" - but NEVER leave it open.
+// =====================================================================
 rules_version = '2';
-
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    // ---------- HELPER FUNCTIONS ----------
-
-    function signedIn() {
-      return request.auth != null;
-    }
-
-    function isAdmin() {
-      return signedIn() &&
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "admin";
-    }
-
-
-    // ---------- USERS ----------
-
-    match /users/{uid} {
-
-      // User can read own profile, admin can read all users
-      allow read: if signedIn() &&
-        (request.auth.uid == uid || isAdmin());
-
-      // New user registration
-      // Users can only create their own profile with customer role
-      allow create: if signedIn() &&
-        request.auth.uid == uid &&
-        request.resource.data.role == "customer";
-
-      // User can update own profile, but cannot change role
-      allow update: if signedIn() &&
-        request.auth.uid == uid &&
-        request.resource.data.role == resource.data.role;
-
-      // Only admin can delete users
-      allow delete: if isAdmin();
-    }
-
-
-    // ---------- MENU ----------
-
-    match /menu/{menuId} {
-
-      // Everyone can view menu
-      allow read: if true;
-
-      // Only admin can manage menu
-      allow create, update, delete: if isAdmin();
-    }
-
-
-    // ---------- ORDERS ----------
-
-    match /orders/{orderId} {
-
-      // Customer can create their own order
-      allow create: if signedIn() &&
-        request.resource.data.customerId == request.auth.uid;
-
-      // Customer can see only own orders
-      // Admin can see all orders
-      allow read: if signedIn() &&
-        (resource.data.customerId == request.auth.uid || isAdmin());
-
-      // Only admin can update order status
-      allow update: if isAdmin();
-
-      // Only admin can delete orders
-      allow delete: if isAdmin();
+    // TODO: users/{uid}
+    // TODO: menu/{itemId}
+    // TODO: orders/{orderId}
+    match /{document=**} {
+      allow read, write: if false;
     }
   }
 }

@@ -3,21 +3,77 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cart | SAFFRON Restaurant</title>
+<title>Cart - SAFFRON</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
-<body data-page="cart">
-<nav class="navbar"><a class="brand" href="index.html">SAFFRON<small>RESTAURANT</small></a>
-<button class="burger" onclick="document.querySelector('.links').classList.toggle('open')">☰</button>
-<ul class="links"><li><a href="index.html">Home</a></li><li><a href="menu.html">Menu</a></li><li><a href="index.html#about">About</a></li><li><a href="index.html#contact">Contact</a></li><li><a href="login.html" id="authLink">Login</a></li><li><a href="cart.html">🛒 Cart (<span id="cartCount">0</span>)</a></li></ul></nav>
-<section class="section narrowbox" id="cartBox"><h2 class="title">Your Cart</h2><div id="cartItems"></div>
-<div id="checkout" class="card" hidden><h3>Customer Details</h3>
-<label>Customer Name<input id="custName" placeholder="Your name"></label>
-<label>Phone Number<input id="custPhone" inputmode="numeric" maxlength="10" placeholder="10-digit mobile number"></label>
-<label>Special Instructions (optional)<textarea id="notes" rows="2"></textarea></label>
-<button class="btn full" id="placeOrder">PLACE ORDER</button></div></section>
-<section class="section narrowbox"><h2 class="title">My Orders</h2><div id="myOrders"></div></section>
-<footer><b>SAFFRON Restaurant</b><br>© 2026 SAFFRON Restaurant. All Rights Reserved.</footer>
-<script type="module" src="js/script.js"></script>
+<body>
+<header class="navbar">
+  <a class="logo" href="index.html"><span class="logo-main">SAFFRON</span><span class="logo-sub">RESTAURANT</span></a>
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">&#9776;</button>
+  <nav class="nav-links" id="navLinks">
+    <a href="index.html">Home</a>
+    <a href="menu.html">Menu</a>
+    <a href="index.html#about">About</a>
+    <a href="index.html#contact">Contact</a>
+    <a href="admin.html" id="adminLink" class="hidden">Admin</a>
+    <a href="login.html" id="authLink">Login</a>
+    <a href="cart.html" class="active">Cart <span class="badge" id="cartCount">0</span></a>
+  </nav>
+</header>
+
+<main class="container">
+  <h2 class="section-title">Your Cart</h2>
+
+  <div class="success-box hidden" id="orderSuccess">
+    <h3>Order Placed Successfully!</h3>
+    <p class="oid" id="successOrderId"></p>
+    <p>Total: <strong id="successTotal"></strong></p>
+    <p>Thank you for ordering from SAFFRON.</p>
+    <a class="btn btn-small" href="menu.html">Order More</a>
+  </div>
+
+  <div class="card empty-box" id="cartEmpty">
+    <p>Your cart is empty.</p>
+    <a class="btn" href="menu.html">Browse Menu</a>
+  </div>
+
+  <div class="cart-layout hidden" id="cartFilled">
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Item</th><th>Price</th><th>Quantity</th><th>Subtotal</th><th></th></tr></thead>
+          <tbody id="cartItems"></tbody>
+        </table>
+      </div>
+      <p class="total-row">Subtotal: <span id="cartSubtotal"></span></p>
+      <p class="total-row">Total: <strong id="cartTotal"></strong></p>
+    </div>
+
+    <div class="card">
+      <h3>Customer Details</h3>
+      <p class="muted hidden" id="loginHint">Tip: <a href="login.html"><u>login</u></a> to see your order history. You can also order as a guest.</p>
+      <form id="checkoutForm" novalidate>
+        <label for="custName">Name</label>
+        <input type="text" id="custName" maxlength="50" placeholder="Your name">
+        <label for="custPhone">Phone Number</label>
+        <input type="tel" id="custPhone" maxlength="15" placeholder="10-digit mobile number">
+        <label for="custNotes">Special Instructions (optional)</label>
+        <textarea id="custNotes" rows="3" maxlength="200" placeholder="e.g. less spicy"></textarea>
+        <p class="error-text" id="formError"></p>
+        <button type="submit" class="btn btn-full" id="placeBtn">PLACE ORDER</button>
+      </form>
+    </div>
+  </div>
+
+  <section class="hidden" id="myOrdersSection" style="margin-top:40px">
+    <h2 class="section-title">My Orders</h2>
+    <div id="myOrders"></div>
+  </section>
+</main>
+<footer class="footer">
+  <strong>SAFFRON</strong> Restaurant<br>
+  <small>&copy; 2026 SAFFRON Restaurant. All rights reserved.</small>
+</footer>
+<script type="module" src="js/checkout.js"></script>
 </body>
 </html>
