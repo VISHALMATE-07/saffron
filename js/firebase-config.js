@@ -14,14 +14,26 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/fireba
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "PASTE_YOUR_API_KEY",
-  authDomain: "PASTE_YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "PASTE_YOUR_PROJECT_ID",
-  storageBucket: "PASTE_YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "PASTE_YOUR_SENDER_ID",
-  appId: "PASTE_YOUR_APP_ID"
+  apiKey: "AIzaSyCcbMMtj0HmLhotSSFPjBSzEY3U_tMCY4A",
+  authDomain: "saffron-d926b.firebaseapp.com",
+  projectId: "saffron-d926b",
+  storageBucket: "saffron-d926b.firebasestorage.app",
+  messagingSenderId: "242756185704",
+  appId: "1:242756185704:web:eb2f11ed2d522126bbd5dd",
+  measurementId: "G-TT9ZFE8KMG"
 };
+
+// Initialize Firebase
+
 
 // true once you have pasted a real key (used to show a helpful warning banner)
 export const isConfigured = !firebaseConfig.apiKey.startsWith("PASTE");

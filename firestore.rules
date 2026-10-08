@@ -1,26 +1,66 @@
-// =====================================================================
-//  firestore.rules  -  PLACEHOLDER (NOT FINAL, NOT PRODUCTION-READY)
-// =====================================================================
-//  Write the real rules AFTER reviewing README.md section
-//  "FIRESTORE SECURITY RULE REQUIREMENTS" and the exact queries in:
-//     js/menu.js, js/checkout.js, js/admin.js, js/auth.js
-//
-//  The rules must be pasted in:
-//     Firebase Console > Firestore Database > Rules > Publish
-//  (or deployed with the Firebase CLI, which is optional).
-//
-//  Until real rules exist, the app cannot work with a locked database
-//  ("allow read, write: if false"). For a short first test only, you may
-//  use Firebase "test mode" - but NEVER leave it open.
-// =====================================================================
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // TODO: users/{uid}
-    // TODO: menu/{itemId}
-    // TODO: orders/{orderId}
-    match /{document=**} {
-      allow read, write: if false;
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Admin = the users/{uid} document has role == 'admin'
+    function isAdmin() {
+      return isSignedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // ---------- users ----------
+    match /users/{uid} {
+      allow read: if isSignedIn() && request.auth.uid == uid;
+      allow create: if isSignedIn()
+        && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['uid','name','email','phone','role','createdAt'])
+        && request.resource.data.uid == uid
+        && request.resource.data.role == 'customer'
+        && request.resource.data.name is string
+        && request.resource.data.phone is string
+        && request.resource.data.createdAt == request.time;
+      allow update, delete: if false;   // nobody can change a role from the website
+    }
+
+    // ---------- menu ----------
+    match /menu/{itemId} {
+      allow get, list: if resource.data.available == true || isAdmin();
+      allow create, update, delete: if isAdmin();
+    }
+
+    // ---------- orders ----------
+    match /orders/{orderId} {
+
+      function validOrder() {
+        let d = request.resource.data;
+        return d.keys().hasOnly(['orderId','customerId','customerName','customerPhone',
+                                 'notes','items','totalAmount','status','createdAt'])
+          && d.keys().hasAll(['orderId','customerId','customerName','customerPhone',
+                              'notes','items','totalAmount','status','createdAt'])
+          && d.orderId == orderId
+          && (d.customerId == null || (isSignedIn() && d.customerId == request.auth.uid))
+          && d.customerName is string && d.customerName.size() >= 2 && d.customerName.size() <= 50
+          && d.customerPhone is string && d.customerPhone.matches('^[0-9]{10}$')
+          && d.notes is string && d.notes.size() <= 200
+          && d.items is list && d.items.size() >= 1 && d.items.size() <= 50
+          && d.totalAmount is number && d.totalAmount > 0
+          && d.status == 'Pending'
+          && d.createdAt == request.time;
+      }
+
+      allow create: if validOrder();
+      allow get, list: if isAdmin()
+        || (isSignedIn() && resource.data.customerId == request.auth.uid);
+      allow update: if isAdmin()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
+        && request.resource.data.status in
+           ['Pending','Confirmed','Preparing','Ready','Completed','Cancelled'];
+      allow delete: if false;
     }
   }
 }
